@@ -1,0 +1,20 @@
+{
+  "name": "backend-sp",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon ./src/index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2",
+    "morgan": "^1.10.0",
+    "mysql": "^2.18.1",
+    "nodemon": "^3.0.3"
+  },
+  "devDependencies": {
+    "dotenv": "^16.4.1"
+  }
+}
