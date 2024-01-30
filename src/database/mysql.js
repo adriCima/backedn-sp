@@ -94,31 +94,32 @@ function del(table, data) {
 // TABLA PRODUCTOS(products) join peso, categoria => se aumentará la lógica para mostrar también la subcategoria 
 function detailProducts(table) {
     return new Promise (( resolve, reject) => {
-        conexion.query(`SELECT products.id, products.sku, products.category, products.description,`+
-        ` products.buy_price, products.sale_price, products.stock, products.min_stock,`+
-        ` products.id_category,  products.id_subcategory, products.id_weight, products.image,`+
-        ` category.category As des_category, weight.weight AS des_weight`+
-        ` FROM ${table}`+
-        ` INNER JOIN category ON products.id_category = category.id`+
-        ` INNER JOIN weight ON products.id_weight = weight.id`+
-        ` ORDER BY id DESC LIMIT 10`, (error, result) =>{
+        conexion.query(`SELECT products.id, products.sku, products.product, products.description,
+            products.buy_price, products.sale_price, products.stock, products.min_stock,
+            products.id_category, products.id_subcategory, products.id_weight, products.image,
+            category.category As des_category, weight.weight AS des_weight, subcategory.subcategory AS des_subcategory
+            FROM ${table}
+            INNER JOIN category ON products.id_category = category.id
+            INNER JOIN weight ON products.id_weight = weight.id
+            INNER JOIN subcategory ON products.id_subcategory = subcategory.id
+            ORDER BY id DESC LIMIT 10`, (error, result) =>{
             return error ? reject(error) : resolve(result);
         })
     });
 }
 
-
 // TABLA PRODUCTOS por id (products) join peso, categoria => se aumentará la lógica para mostrar también la subcategoria 
 function detailProductsId(table, id) {
     return new Promise (( resolve, reject) => {
-        conexion.query(`SELECT products.id, products.sku, products.category, products.description,`+
-        ` products.buy_price, products.sale_price, products.stock, products.min_stock,`+
-        ` products.id_category,  products.id_subcategory, products.id_weight, products.image,`+
-        ` category.category As des_category, weight.weight AS des_weight`+
-        ` FROM ${table}`+
-        ` INNER JOIN category ON products.id_category = category.id`+
-        ` INNER JOIN weight ON products.id_weight = weight.id`+
-        ` WHERE products.id = ${id}` , (error, result) =>{
+        conexion.query(`SELECT products.id, products.sku, products.product, products.description,
+            products.buy_price, products.sale_price, products.stock, products.min_stock,
+            products.id_category,  products.id_subcategory, products.id_weight, products.image,
+            category.category As des_category, weight.weight AS des_weight,  subcategory.subcategory AS des_subcategory
+            FROM ${table}
+            INNER JOIN category ON products.id_category = category.id
+            INNER JOIN weight ON products.id_weight = weight.id
+            INNER JOIN subcategory ON products.id_subcategory = subcategory.id
+            WHERE products.id = ${id}` , (error, result) =>{
             return error ? reject(error) : resolve(result);
         })
     });
@@ -149,7 +150,7 @@ function detailUsersId(table, id) {
 // TABLA ORDENES(orders) join branch, status, status_pay  COMPLETAS => USO GENERAL
 function detailOrdersAll(table) {
     return new Promise (( resolve, reject) => {
-        conexion.query(`SELECT o.id_notaventa, o.id_customer, o.total_products, o.total_order, o.id_branch,`+
+        conexion.query(`SELECT o.id, o.id_customer, o.total_products, o.total_order, o.id_branch,`+
         ` b.nombre_sucursal, os.status, sp.status_pay`+
         ` FROM ${table} o`+
         ` INNER JOIN branchs b ON o.id_branch = b.id`+
@@ -178,7 +179,7 @@ function detailOrdersId(table, id) {
 // TABLA ORDENES(orders) join branch, status, status_pay PARA USO ADMINISTRATIVO
 function detailOrdersPendingDelivery(table) {
     return new Promise (( resolve, reject) => {
-        conexion.query(`SELECT o.id_notaventa, o.id_customer, o.total_products, o.total_order, o.id_branch,`+
+        conexion.query(`SELECT o.id, o.id_customer, o.total_products, o.total_order, o.id_branch,`+
         ` b.nombre_sucursal, os.status, sp.status_pay`+
         ` FROM ${table} o`+
         ` INNER JOIN branchs b ON o.id_branch = b.id`+
@@ -193,7 +194,7 @@ function detailOrdersPendingDelivery(table) {
 // TABLA ORDENES(orders) join branch, status, status_pay DE ACUERDO AL ESTADO DEL PEDIDO
 function detailOrdersStatus(table, id) {
     return new Promise (( resolve, reject) => {
-        conexion.query(`SELECT o.id_notaventa, o.id_customer, o.total_products, o.total_order, o.id_branch,`+
+        conexion.query(`SELECT o.id, o.id_customer, o.total_products, o.total_order, o.id_branch,`+
         ` b.nombre_sucursal, os.status, sp.status_pay`+
         ` FROM ${table} o`+
         ` INNER JOIN branchs b ON o.id_branch = b.id`+
@@ -208,7 +209,7 @@ function detailOrdersStatus(table, id) {
 // TABLA ORDENES(orders) join branch, status, status_pay DE ACUERDO AL ESTADO DEL PAGO
 function detailOrdersStatusPay(table, id) {
     return new Promise (( resolve, reject) => {
-        conexion.query(`SELECT o.id_notaventa, o.id_customer, o.total_products, o.total_order, o.id_branch,`+
+        conexion.query(`SELECT o.id, o.id_customer, o.total_products, o.total_order, o.id_branch,`+
         ` b.nombre_sucursal, os.status, sp.status_pay`+
         ` FROM ${table} o`+
         ` INNER JOIN branchs b ON o.id_branch = b.id`+
@@ -274,22 +275,53 @@ function detailEmployedId(table, id) {
     });
 }
 
+
+// TABLA DETALLE DE ORDENES por ID DE ORDEN (employed) join CARGO(position) TIPO DE USUARIO(user_type)
+function detailOrderIdOrder(table, id) {
+    return new Promise (( resolve, reject) => {
+        conexion.query(`SELECT od.id, od.id_order, od.id_product, od.single_price, 
+        od.q_product, od.total_price, p.category
+        FROM ${table} od 
+        INNER JOIN products p ON od.id_product = p.id WHERE od.id_order = ${id}`, (error, result) =>{
+            return error ? reject(error) : resolve(result);
+        })
+    });
+}
+
+// TABLA DETALLE DE ORDENES por ID DE ORDEN (employed) join CARGO(position) TIPO DE USUARIO(user_type)
+function detailOrderMarket(table, id) {
+    return new Promise (( resolve, reject) => {
+        conexion.query(`SELECT om.id, om.id_order, om.id_shipping_type, om.direccion, om.nit, om.razon_social, om.shipping_cost, 
+        om.discount, om.cod_discount, om.total, om.id_pay_type, om.cod_verificacion, st.shipping, tp.type
+        FROM ${table} om
+        INNER JOIN shipping_type st ON om.id_shipping_type = st.id
+        INNER JOIN type_pay tp ON om.id_pay_type = tp.id 
+        WHERE om.id_order = ${id} `, (error, result) =>{
+            return error ? reject(error) : resolve(result);
+        })
+    });
+}
+
+
+
 module.exports = {
     all,
-    unique,
-    insert,
     del,
-    detailProducts,
-    detailProductsId,
+    insert,
+    unique,
     detailUsers,
     detailUsersId,
-    detailOrdersAll,
-    detailOrdersPendingDelivery,
-    detailOrdersStatus,
-    detailOrdersStatusPay,
+    detailProducts,
     detailOrdersId,
-    detailCustomers,
-    detailCustomersId,
     detailEmployed,
+    detailOrdersAll,
+    detailCustomers,
+    detailProductsId,
     detailEmployedId,
+    detailOrderMarket,
+    detailCustomersId,
+    detailOrdersStatus,
+    detailOrderIdOrder,    
+    detailOrdersStatusPay,
+    detailOrdersPendingDelivery,
 }
