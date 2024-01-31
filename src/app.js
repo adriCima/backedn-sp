@@ -71,7 +71,6 @@ app.use('/api/order_market', order_market)
 app.use('/api/shipping_type', shipping_type)
 app.use('/api/customers_adress', customers_adress)
 
-
 app.use(error);
 
 module.exports = app;
