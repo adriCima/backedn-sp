@@ -16,8 +16,8 @@ module.exports = function(dbInyectada){
         return db.unique(TABLA, id)
     }
 
-    function del(body){
-        return db.del(TABLA, body)
+    function del(categoryId){
+        return db.del(TABLA, categoryId)
     }
 
     function insert(body){

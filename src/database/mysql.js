@@ -70,15 +70,11 @@ function insert(table, data) {
 // Genérico para eliminar datos de una tabla
 function del(table, data) {
     return new Promise (( resolve, reject) => {
-        conexion.query(`DELETE FROM ${table} WHERE id = ?`, data.id,  (error, result) =>{
+        conexion.query(`DELETE FROM ${table} WHERE id = ${data}`,  (error, result) =>{
             return error ? reject(error) : resolve(result);
         })
     });  
 }
-
-
-
-
 
 // TABLA PRODUCTOS(products) join peso, categoria => se aumentará la lógica para mostrar también la subcategoria 
 function detailProducts(table) {

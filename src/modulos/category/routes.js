@@ -8,7 +8,7 @@ const router = express.Router();
 
 router.get('/', all);
 router.get('/:id', unique);
-router.put('/', del);
+router.delete('/:id', del);
 router.post('/', insert);
 
 async function all(req, res, next){
@@ -31,7 +31,7 @@ async function unique(req, res, next){
 
 async function del(req, res, next){
     try {
-        const items =  await controller.del(req.body)
+        const items =  await controller.del(req.params.id)
         respuesta.success(req, res, 'Categoria eliminada correctamente' , 200)
     } catch (err) {
         next(err);
