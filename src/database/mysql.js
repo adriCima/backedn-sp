@@ -60,7 +60,7 @@ function unique(table, id) {
 
 function insert(table, data) {
     return new Promise (( resolve, reject) => {
-        conexion.query(`INSERT INTO ${table} SET ? ON DUPLICATE KEY UPDATE ?`, [data, data],  (error, result) =>{
+        conexion.query(`INSERT INTO ${table} SET ${data} ON DUPLICATE KEY UPDATE ${data}`,  (error, result) =>{
             return error ? reject(error) : resolve(result);
         })
     });
