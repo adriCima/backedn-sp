@@ -13,6 +13,10 @@ module.exports = function(dbInyectada){
         return db.detailOrdersAll(TABLA) 
     }
 
+    function countOrders(){
+        return db.countOrders(TABLA)
+    }
+
     function detailOrdersPendingDelivery(){
         return db.detailOrdersPendingDelivery(TABLA)
     }
@@ -45,5 +49,6 @@ module.exports = function(dbInyectada){
         detailOrdersId,
         del,
         insert,
+        countOrders,
     }
 }

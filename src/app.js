@@ -1,5 +1,6 @@
 const express = require('express');
 const morgan = require('morgan');
+const cors = require('cors');
 const config = require('./config.js');
 
 const users = require('./modulos/users/routes.js');
@@ -22,12 +23,27 @@ const order_market = require('./modulos/order_market/routes.js');
 const shipping_type = require('./modulos/shipping_type/routes.js');
 const customers_adress = require('./modulos/customersadress/routes.js');
 
+// SITIOS PERMITIDOS PARA LA CONECCIÓN
+const allowedOrigins = ['http://localhost:3000', 'http://localhost:5173' ];
+
+// Funcion para determinar los sitios permitidos para la conección
+const corsPermition = {
+  origin: function (origin, callback) {
+    if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+};
+
 const error = require('./red/errors');
 
 const app = express();
 
 // Middleware
 app.use(morgan('dev'));
+app.use(cors(corsPermition));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true}))
 
@@ -54,7 +70,6 @@ app.use('/api/order_detail', order_detail)
 app.use('/api/order_market', order_market)
 app.use('/api/shipping_type', shipping_type)
 app.use('/api/customers_adress', customers_adress)
-
 
 app.use(error);
 

@@ -76,6 +76,10 @@ function del(table, data) {
     });  
 }
 
+
+
+
+
 // TABLA PRODUCTOS(products) join peso, categoria => se aumentará la lógica para mostrar también la subcategoria 
 function detailProducts(table) {
     return new Promise (( resolve, reject) => {
@@ -109,6 +113,7 @@ function detailProductsId(table, id) {
         })
     });
 }
+
 
 // TABLA USUARIOS(users) join peso, type_user
 function detailUsers(table) {
@@ -308,5 +313,5 @@ module.exports = {
     detailOrdersStatus,
     detailOrderIdOrder,    
     detailOrdersStatusPay,
-    detailOrdersPendingDelivery,
+    detailOrdersPendingDelivery,  
 }

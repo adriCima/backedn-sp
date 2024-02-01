@@ -7,6 +7,7 @@ const controller = require('./index');
 const router = express.Router(); 
 
 router.get('/', detailOrdersAll);
+router.get('/countorders', countOrders);
 router.get('/pendingdelivery', detailOrdersPendingDelivery);
 router.get('/status/:id', detailOrdersStatus);
 router.get('/statusPay/:id', detailOrdersStatusPay);
@@ -18,6 +19,15 @@ async function detailOrdersAll(req, res, next){
     try{
         const items =  await controller.detailOrdersAll()
         respuesta.success(req, res, items , 200)
+    } catch(err){
+        next(err);
+    }
+};
+
+async function countOrders(req, res, next){
+    try{
+        const data =  await controller.countOrders()
+        respuesta.success(req, res, data , 200)
     } catch(err){
         next(err);
     }
