@@ -56,31 +56,16 @@ function unique(table, id) {
 }
 
 // Genérico para insertar o actualizar datos a una tabla
+
+
 function insert(table, data) {
-    if(data && data.id == 0){
-        return registrar(table, data);
-    }else{
-        return actualizar(table, data)
-    }
-}
-
-// Funcion para registrar 
-function registrar(table, data) {
     return new Promise (( resolve, reject) => {
-        conexion.query(`INSERT INTO ${table} SET ?`, data,  (error, result) =>{
+        conexion.query(`INSERT INTO ${table} SET ? ON DUPLICATE KEY UPDATE ?`, [data, data],  (error, result) =>{
             return error ? reject(error) : resolve(result);
         })
     });
 }
 
-// Funcion para actualizar 
-function actualizar(table, data) {
-    return new Promise (( resolve, reject) => {
-        conexion.query(`UPDATE ${table} SET ? WHERE id = ?`, [data, data.id] , (error, result) =>{
-            return error ? reject(error) : resolve(result);
-        })
-    });
-}
 
 // Genérico para eliminar datos de una tabla
 function del(table, data) {
